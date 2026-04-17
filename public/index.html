@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ALIADO — INVINCIBLE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bangers&family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash" class="screen active">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="invincible-logo">
+      <span class="logo-i">I</span><span class="logo-rest">ALIADO</span>
+    </div>
+    <p class="splash-sub">POWERED BY INVINCIBLE</p>
+    <div class="splash-tagline">"Eu pensei que você seria diferente."</div>
+    <div class="splash-buttons">
+      <button class="btn btn-primary" onclick="showScreen('lobby')">CRIAR SALA</button>
+      <button class="btn btn-secondary" onclick="showScreen('join')">ENTRAR NA SALA</button>
+    </div>
+  </div>
+  <div class="blood-drip"></div>
+</div>
+
+<!-- CREATE LOBBY -->
+<div id="lobby" class="screen">
+  <div class="screen-header">
+    <button class="btn-back" onclick="showScreen('splash')">← VOLTAR</button>
+    <h2>CRIAR SALA</h2>
+  </div>
+  <div class="form-card">
+    <label>SEU NOME DE HERÓI</label>
+    <input type="text" id="create-name" placeholder="Mark Grayson..." maxlength="20" />
+    <button class="btn btn-primary" onclick="createRoom()">CRIAR SALA</button>
+  </div>
+</div>
+
+<!-- JOIN ROOM -->
+<div id="join" class="screen">
+  <div class="screen-header">
+    <button class="btn-back" onclick="showScreen('splash')">← VOLTAR</button>
+    <h2>ENTRAR NA SALA</h2>
+  </div>
+  <div class="form-card">
+    <label>SEU NOME DE HERÓI</label>
+    <input type="text" id="join-name" placeholder="Atom Eve..." maxlength="20" />
+    <label>CÓDIGO DA SALA</label>
+    <input type="text" id="join-code" placeholder="Ex: AB3KZ" maxlength="5" style="text-transform:uppercase;letter-spacing:4px;font-size:1.4rem;text-align:center" />
+    <button class="btn btn-primary" onclick="joinRoom()">ENTRAR</button>
+  </div>
+</div>
+
+<!-- WAITING ROOM -->
+<div id="waiting" class="screen">
+  <div class="screen-header">
+    <h2>AGUARDANDO HERÓIS</h2>
+  </div>
+  <div class="room-code-display">
+    <span class="room-label">CÓDIGO DA SALA</span>
+    <span id="display-room-code" class="room-code-big">-----</span>
+    <button class="btn-copy" onclick="copyCode()">COPIAR</button>
+  </div>
+  <div id="waiting-players" class="waiting-players"></div>
+  <button id="ready-btn" class="btn btn-secondary" onclick="toggleReady()">ESTOU PRONTO</button>
+  <button id="start-btn" class="btn btn-primary hidden" onclick="startGame()">INICIAR BATALHA</button>
+  <div id="waiting-log" class="waiting-log"></div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game" class="screen">
+  <div class="game-layout">
+    <!-- Board area -->
+    <div class="board-container">
+      <canvas id="gameCanvas" width="360" height="360"></canvas>
+    </div>
+
+    <!-- Side panel -->
+    <div class="side-panel">
+      <!-- Current turn -->
+      <div class="turn-indicator" id="turn-indicator">
+        <span id="turn-name">Aguardando...</span>
+      </div>
+
+      <!-- Dice area -->
+      <div class="dice-area" id="dice-area">
+        <div class="dice-display">
+          <div class="die" id="die1">?</div>
+          <div class="die" id="die2">?</div>
+        </div>
+        <button class="btn btn-primary" id="roll-btn" onclick="rollDice()" disabled>ROLAR DADOS</button>
+      </div>
+
+      <!-- Players -->
+      <div class="players-panel" id="players-panel"></div>
+
+      <!-- Alliance actions -->
+      <div class="alliance-panel" id="alliance-panel">
+        <div class="alliance-title">ALIANÇAS</div>
+        <div id="alliance-buttons"></div>
+      </div>
+
+      <!-- Game log -->
+      <div class="game-log" id="game-log"></div>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="chat-bar">
+    <input type="text" id="chat-input" placeholder="Fala pro grupo..." maxlength="100" />
+    <button onclick="sendChat()">→</button>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div id="gameover" class="screen">
+  <div class="gameover-content">
+    <div class="gameover-title">INVINCIBLE!</div>
+    <div id="gameover-winner" class="gameover-winner"></div>
+    <div class="gameover-quote">"Você não pode me vencer."</div>
+    <button class="btn btn-primary" onclick="showScreen('splash')">JOGAR NOVAMENTE</button>
+  </div>
+</div>
+
+<!-- Alliance proposal modal -->
+<div id="alliance-modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-title">PROPOSTA DE ALIANÇA</div>
+    <div id="alliance-proposal-text"></div>
+    <div class="modal-buttons">
+      <button class="btn btn-primary" onclick="respondAlliance(true)">ACEITAR</button>
+      <button class="btn btn-danger" onclick="respondAlliance(false)">RECUSAR</button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/board.js"></script>
+<script src="/js/game.js"></script>
+</body>
+</html>
